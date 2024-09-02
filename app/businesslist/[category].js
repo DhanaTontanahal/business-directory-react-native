@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { collection, where, query, getDocs } from "firebase/firestore";
@@ -10,6 +10,7 @@ export default function BusListByCat() {
   const navigation = useNavigation();
 
   const { category } = useLocalSearchParams();
+  const [loading, setLoading] = useState(false);
 
   const [busListByCat, setBusListByCat] = useState([]);
   useEffect(() => {
@@ -22,24 +23,35 @@ export default function BusListByCat() {
   }, []);
 
   const getBusList = async () => {
+    setBusListByCat([]);
+    setLoading(true);
     const q = query(
       collection(db, "BusinessList"),
       where("category", "==", category)
     );
     const querySnapShot = await getDocs(q);
     querySnapShot.forEach((element) => {
-      console.log(element);
+      //   console.log(element);
       setBusListByCat((prev) => [...prev, element.data()]);
     });
+    setLoading(false);
   };
 
   return (
     <View>
-      {busListByCat.length > 0 ? (
+      {busListByCat.length > 0 && !loading ? (
         <FlatList
+          onRefresh={getBusList}
+          refreshing={loading}
           data={busListByCat}
           renderItem={({ item }) => <BusinessCardbyCat business={item} />}
         />
+      ) : loading ? (
+        <ActivityIndicator
+          style={{ marginTop: "60%" }}
+          size={"large"}
+          color={Colors.PRIMARY}
+        ></ActivityIndicator>
       ) : (
         <Text
           style={{
