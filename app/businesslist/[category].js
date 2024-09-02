@@ -8,7 +8,7 @@ import { Colors } from "../../constants/Colors";
 
 export default function BusListByCat() {
   const navigation = useNavigation();
-
+  //important:this category should match with file name
   const { category } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +32,10 @@ export default function BusListByCat() {
     const querySnapShot = await getDocs(q);
     querySnapShot.forEach((element) => {
       //   console.log(element);
-      setBusListByCat((prev) => [...prev, element.data()]);
+      setBusListByCat((prev) => [
+        ...prev,
+        { id: element?.id, ...element.data() },
+      ]);
     });
     setLoading(false);
   };

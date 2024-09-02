@@ -1,10 +1,14 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { Colors } from "../../constants/Colors";
+import { useRouter } from "expo-router";
 
 export default function BusinessCardbyCat({ business }) {
+  const router = useRouter();
+
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => router.push("/businessdetail/" + business.id)}
       style={{
         padding: 10,
         margin: 10,
@@ -43,6 +47,6 @@ export default function BusinessCardbyCat({ business }) {
           <Text style={{ fontFamily: "outfit-reg" }}>4.5</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
