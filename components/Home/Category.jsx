@@ -4,9 +4,11 @@ import { Colors } from "../../constants/Colors";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "./../../configs/FirebaseConfig";
 import CategoryItem from "./CategoryItem";
+import { useRouter } from "expo-router";
 
 export default function Category() {
   const [catList, setCatList] = useState([]);
+  const router = useRouter();
   const GetCategoryList = async () => {
     setCatList([]);
     //console.log("GetCategoryList");
@@ -28,6 +30,7 @@ export default function Category() {
 
   const onCategoryPress = (c) => {
     console.log(c);
+    router.push("/businesslist/" + c.name);
   };
   return (
     <View>
