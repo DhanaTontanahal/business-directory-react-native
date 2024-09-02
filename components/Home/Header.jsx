@@ -3,6 +3,7 @@ import React from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { Colors } from "../../constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
+// import Slider from "./Slider";
 
 export default function Header() {
   const { user } = useUser();
