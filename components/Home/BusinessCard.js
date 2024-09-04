@@ -51,7 +51,7 @@ export default function BusinessCard({ business }) {
 
         <Text
           style={{
-            fontFamily: "outfit",
+            fontFamily: "outfit-reg",
             backgroundColor: Colors.PRIMARY,
             color: "#fff",
             padding: 3,

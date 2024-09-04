@@ -7,6 +7,7 @@ import { Colors } from "../../constants/Colors";
 import Intro from "../../components/BusinessDetail/Intro";
 import ActionButtons from "../../components/BusinessDetail/ActionButtons";
 import About from "../../components/BusinessDetail/About";
+import Reviews from "../../components/BusinessDetail/Reviews";
 
 export default function BusDetail() {
   //important:this businessid should match with file name
@@ -23,7 +24,7 @@ export default function BusDetail() {
     if (docSnap.exists()) {
       /// console.log("docSnap");
       setLoading(false);
-      setBusDetailInfo(docSnap.data());
+      setBusDetailInfo({ id: docSnap.id, ...docSnap.data() });
     } else {
       setLoading(true);
       //console.log("===========");
@@ -49,6 +50,7 @@ export default function BusDetail() {
           <Intro business={busDetailInfo} />
           <ActionButtons business={busDetailInfo} />
           <About business={busDetailInfo} />
+          <Reviews business={busDetailInfo} />
         </View>
       )}
     </ScrollView>
