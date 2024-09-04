@@ -16,7 +16,7 @@ export default function BusinessList() {
     const querySnapShot = await getDocs(q);
 
     querySnapShot.forEach((doc) => {
-      setBusList((prev) => [...prev, doc.data()]);
+      setBusList((prev) => [...prev, { id: doc.id, ...doc.data() }]);
     });
   };
 

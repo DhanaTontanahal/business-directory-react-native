@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Linking,
+  Share,
 } from "react-native";
 import React from "react";
 
@@ -39,6 +40,9 @@ export default function ActionButtons({ business }) {
 
   const openOnPressHandler = (item) => {
     if (item.name == "share") {
+      Share.share({
+        message: business?.name + "\n Address " + business.address,
+      });
       return;
     }
     Linking.openURL(item.url);
