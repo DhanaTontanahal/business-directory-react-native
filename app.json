@@ -27,7 +27,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "App is asking to access your photos"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
