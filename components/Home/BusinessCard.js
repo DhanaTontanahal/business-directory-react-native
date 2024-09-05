@@ -5,8 +5,7 @@ import { useRouter } from "expo-router";
 
 export default function BusinessCard({ business }) {
   console.log(business.address);
-  console.log("*******88888888888888888888888888*****************");
-  console.log(business?.id);
+
   const router = useRouter();
   return (
     <TouchableOpacity

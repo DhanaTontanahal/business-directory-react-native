@@ -6,7 +6,7 @@ import { db } from "./../../configs/FirebaseConfig";
 import CategoryItem from "./CategoryItem";
 import { useRouter } from "expo-router";
 
-export default function Category() {
+export default function Category({ explore = false, onCategorySelect }) {
   const [catList, setCatList] = useState([]);
   const router = useRouter();
   const GetCategoryList = async () => {
@@ -29,34 +29,40 @@ export default function Category() {
   }, []);
 
   const onCategoryPress = (c) => {
-    console.log(c);
-    router.push("/businesslist/" + c.name);
+    if (!explore) {
+      router.push("/businesslist/" + c.name);
+    } else {
+      onCategorySelect(c.name);
+    }
+    // console.log(c);
   };
   return (
     <View>
-      <View
-        style={{
-          padding: 20,
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginTop: 10,
-        }}
-      >
-        <Text
+      {!explore && (
+        <View
           style={{
-            paddingLeft: 20,
+            padding: 20,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
             marginTop: 10,
-            fontSize: 20,
-            fontFamily: "outfit-bold",
           }}
         >
-          Category
-        </Text>
-        <Text style={{ color: Colors.PRIMARY, fontFamily: "outfit-medium" }}>
-          View all
-        </Text>
-      </View>
+          <Text
+            style={{
+              paddingLeft: 20,
+              marginTop: 10,
+              fontSize: 20,
+              fontFamily: "outfit-bold",
+            }}
+          >
+            Category
+          </Text>
+          <Text style={{ color: Colors.PRIMARY, fontFamily: "outfit-medium" }}>
+            View all
+          </Text>
+        </View>
+      )}
 
       <FlatList
         style={{ marginLeft: 20 }}
