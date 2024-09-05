@@ -26,6 +26,9 @@ export default function AddBusiness() {
     navigation.setOptions({
       headerTitle: "Add new Business",
       headerShown: true,
+      headerStyle: {
+        backgroundColor: Colors.PRIMARY,
+      },
     });
     GetCategoryList();
     return () => {};
