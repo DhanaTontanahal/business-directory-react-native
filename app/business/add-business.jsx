@@ -3,7 +3,6 @@ import {
   ScrollView,
   Text,
   Image,
-  Touchable,
   TouchableOpacity,
   TextInput,
   ToastAndroid,
@@ -13,7 +12,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { collection, query, getDocs, setDoc, doc } from "firebase/firestore";
 import { db, storage } from "./../../configs/FirebaseConfig";
 import React, { useEffect, useState } from "react";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useNavigation } from "expo-router";
 import { Colors } from "../../constants/Colors";
 import * as ImagePicker from "expo-image-picker";
@@ -30,9 +29,9 @@ export default function AddBusiness() {
         backgroundColor: Colors.PRIMARY,
       },
     });
+
     GetCategoryList();
-    return () => {};
-  }, []);
+  }, [navigation, GetCategoryList]);
 
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState();
@@ -49,32 +48,32 @@ export default function AddBusiness() {
       allowsEditing: true,
       quality: 1,
     });
-    console.log(result);
-    setImage(result.assets[0].uri);
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setImage(result.assets[0].uri);
+    } else {
+      console.log("Image selection was canceled");
+    }
   };
 
   const onAddNewBusiness = async () => {
     setLoading(true);
     try {
-      //  console.log("8*********************88");
-      const fileName = Date.now().toString() + ".jpg";
-      // console.log(fileName);
+      if (!image) {
+        throw new Error("Image is not selected");
+      }
 
-      // Fetch the image from the provided URL
+      const fileName = Date.now().toString() + ".jpg";
+
       const resp = await fetch(image);
       if (!resp.ok) {
         throw new Error("Failed to fetch the image");
       }
 
-      //   console.log("======123=====");
       const blob = await resp.blob();
-      //   console.log(blob);
 
-      // Create a reference to Firebase Storage
       const imageRef = ref(storage, "business-app/" + fileName);
-      //  console.log("Image reference created: ", imageRef);
 
-      // Upload the image blob to Firebase Storage
       const uploadTask = uploadBytes(imageRef, blob);
 
       uploadTask
@@ -91,46 +90,39 @@ export default function AddBusiness() {
           });
         })
         .catch((error) => {
-          console.error("File upload failed: ", error);
           setLoading(false);
         });
     } catch (error) {
-      console.error("Error occurred:", error);
       setLoading(false);
+      ToastAndroid.show(error.message, ToastAndroid.LONG);
     }
   };
 
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const saveBusinessDetail = async (imageUrl) => {
-    console.log("*************************************");
-    console.log({
-      name: name,
-      address: addre,
-      contact: contact,
-      about: about,
-      website: website,
-      category: cat,
-      user: user?.fullName,
-      userEmail: user?.primaryEmailAddress.emailAddress,
-      userImage: user?.imageUrl,
-      imageUrl: imageUrl,
-    });
-
-    console.log("*********************************");
-    await setDoc(doc(db, "BusinessList", Date.now().toString()), {
-      name: name,
-      address: addre,
-      contact: contact,
-      about: about,
-      website: website,
-      category: cat,
-      user: user?.fullName,
-      userEmail: user?.primaryEmailAddress.emailAddress,
-      userImage: user?.imageUrl,
-      imageUrl: imageUrl,
-    });
-    setLoading(false);
-    ToastAndroid.show("New business added", ToastAndroid.LONG);
+    if (!isLoaded || !user) {
+      ToastAndroid.show("User information is not loaded", ToastAndroid.LONG);
+      return;
+    }
+    try {
+      await setDoc(doc(db, "BusinessList", Date.now().toString()), {
+        name: name,
+        address: addre,
+        contact: contact,
+        about: about,
+        website: website,
+        category: cat,
+        user: user?.fullName,
+        userEmail: user?.primaryEmailAddress.emailAddress,
+        userImage: user?.imageUrl,
+        imageUrl: imageUrl,
+      });
+      setLoading(false);
+      ToastAndroid.show("New business added", ToastAndroid.LONG);
+    } catch (error) {
+      setLoading(false);
+      ToastAndroid.show("Failed to save business details", ToastAndroid.LONG);
+    }
   };
   const [ctList, setCtList] = useState([]);
   const GetCategoryList = async () => {
@@ -252,10 +244,14 @@ export default function AddBusiness() {
             marginTop: 10,
           }}
         >
-          <RNPickerSelect
-            onValueChange={(value) => setCat(value)}
-            items={ctList}
-          />
+          {ctList.length > 0 ? (
+            <RNPickerSelect
+              onValueChange={(value) => setCat(value)}
+              items={ctList}
+            />
+          ) : (
+            <Text>No categories available</Text>
+          )}
         </View>
       </View>
       <TouchableOpacity

@@ -17,11 +17,9 @@ export default function LoginScreen() {
     try {
       const { createdSessionId, signIn, signUp, setActive } =
         await startOAuthFlow();
-
       if (createdSessionId) {
         setActive({ session: createdSessionId });
       } else {
-        // Use signIn or signUp for next steps such as MFA
       }
     } catch (err) {
       console.error("OAuth error", err);
@@ -47,7 +45,7 @@ export default function LoginScreen() {
         <Text
           style={{
             fontSize: 20,
-            fontFamily: "outfit-Bold",
+            fontFamily: "outfit-bold",
             textAlign: "center",
           }}
         >

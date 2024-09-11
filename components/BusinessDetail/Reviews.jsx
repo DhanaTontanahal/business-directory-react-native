@@ -24,19 +24,24 @@ export default function Reviews({ business }) {
   const [userInput, setUserInput] = useState();
   const { user } = useUser();
   const onSubmit = async () => {
-    const docRef = doc(db, "BusinessList", business?.id);
-    await updateDoc(docRef, {
-      reviews: arrayUnion({
-        rating: rating,
-        comment: userInput,
-        userName: user?.fullName,
-        userImage: user?.imageUrl,
-        userEmail: user?.primaryEmailAddress?.emailAddress,
-      }),
-    });
-
-    ToastAndroid.show("Comment added succesfully", ToastAndroid.BOTTOM);
+    try {
+      const docRef = doc(db, "BusinessList", business?.id);
+      await updateDoc(docRef, {
+        reviews: arrayUnion({
+          rating: rating,
+          comment: userInput,
+          userName: user?.fullName,
+          userImage: user?.imageUrl,
+          userEmail: user?.primaryEmailAddress?.emailAddress,
+        }),
+      });
+      ToastAndroid.show("Comment added successfully", ToastAndroid.BOTTOM);
+    } catch (error) {
+      console.error("Error adding comment: ", error);
+      ToastAndroid.show("Failed to add comment", ToastAndroid.BOTTOM);
+    }
   };
+
   return (
     <View style={{ padding: 20, backgroundColor: "#fff" }}>
       <Text style={{ fontFamily: "outfit-bold", fontSize: 20 }}>Reviews</Text>
@@ -85,6 +90,7 @@ export default function Reviews({ business }) {
       <View>
         {business?.reviews?.map((item, index) => (
           <View
+            key={index}
             style={{
               display: "flex",
               flexDirection: "row",

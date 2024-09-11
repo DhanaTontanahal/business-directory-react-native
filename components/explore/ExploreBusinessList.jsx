@@ -4,16 +4,12 @@ import BusinessListCard from "./BusinessListCard";
 
 export default function ExploreBusinessList({ businesslist }) {
   return (
-    <ScrollView>
-      <FlatList
-        scrollEnabled
-        data={businesslist}
-        renderItem={({ item, index }) => (
-          <BusinessListCard key={index} business={item} />
-        )}
-      />
-
-      <View style={{ height: 400 }}></View>
-    </ScrollView>
+    <FlatList
+      data={businesslist}
+      renderItem={({ item, index }) => (
+        <BusinessListCard key={index} business={item} />
+      )}
+      ListFooterComponent={<View style={{ height: 400 }} />}
+    />
   );
 }

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "busdir",
-    "slug": "busdir",
-    "version": "1.0.0",
+    "name": "Business directory app",
+    "slug": "busdirapp",
+    "version": "1.9.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -16,10 +16,13 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.dtontanahal.busdirapp",
+      "versionCode": 13,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +40,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ca74c34e-7961-4e70-8057-52badd93b5e0"
+      }
     }
   }
 }

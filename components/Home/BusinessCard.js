@@ -4,8 +4,6 @@ import { Colors } from "../../constants/Colors";
 import { useRouter } from "expo-router";
 
 export default function BusinessCard({ business }) {
-  console.log(business.address);
-
   const router = useRouter();
   return (
     <TouchableOpacity

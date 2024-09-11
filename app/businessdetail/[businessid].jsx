@@ -18,27 +18,30 @@ export default function BusDetail() {
 
   const getBusinessDetailById = async () => {
     setLoading(true);
-    const docRef = doc(db, "BusinessList", businessid);
-    const docSnap = await getDoc(docRef);
+    try {
+      const docRef = doc(db, "BusinessList", businessid);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      /// console.log("docSnap");
-      setLoading(false);
-      setBusDetailInfo({ id: docSnap.id, ...docSnap.data() });
-    } else {
-      setLoading(true);
-      //console.log("===========");
+      if (docSnap.exists()) {
+        setBusDetailInfo({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        console.log("No such document exists!");
+      }
+    } catch (error) {
+      console.error("Error fetching business details: ", error);
+    } finally {
+      setLoading(false); // Stop loading in both success and failure cases
     }
   };
 
   useEffect(() => {
-    getBusinessDetailById();
-
-    return () => {};
-  }, []);
+    if (businessid) {
+      getBusinessDetailById();
+    }
+  }, [businessid]);
 
   return (
-    <ScrollView>
+    <View>
       {loading ? (
         <ActivityIndicator
           size="large"
@@ -46,13 +49,21 @@ export default function BusDetail() {
           style={{ marginTop: "70%" }}
         />
       ) : (
-        <View>
-          <Intro business={busDetailInfo} />
+        <>
+          <ScrollView>
+            <View>
+              <Intro business={busDetailInfo} />
+              <About business={busDetailInfo} />
+            </View>
+          </ScrollView>
+
+          {/* Move ActionButtons outside the ScrollView because it uses FlatList */}
           <ActionButtons business={busDetailInfo} />
-          <About business={busDetailInfo} />
+
+          {/* Move Reviews outside the ScrollView if it contains a FlatList */}
           <Reviews business={busDetailInfo} />
-        </View>
+        </>
       )}
-    </ScrollView>
+    </View>
   );
 }

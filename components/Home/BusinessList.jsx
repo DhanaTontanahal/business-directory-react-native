@@ -25,7 +25,6 @@ export default function BusinessList() {
     return () => {};
   }, []);
 
-  console.log(busList.length);
   return (
     <View>
       <View
